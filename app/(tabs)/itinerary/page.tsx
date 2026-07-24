@@ -3,6 +3,8 @@ import { getActiveTrip } from "@/lib/trip";
 import { CDMX_TZ } from "@/lib/geocode";
 import type { Item } from "@/lib/types";
 import ItemCard from "@/components/item-card";
+import PhotoStrip from "@/components/photo-strip";
+import { photosByDay } from "@/lib/photos-by-day";
 
 // Local date range [starts_on, ends_on] as "YYYY-MM-DD" strings.
 function dayRange(start: string, end: string): string[] {
@@ -36,6 +38,7 @@ export default async function Itinerary() {
     .order("starts_at", { ascending: true });
 
   const items = (data as Item[]) ?? [];
+  const photos = await photosByDay(supabase, trip!.id);
 
   // Bucket items by their venue-tz local day.
   const byDay = new Map<string, Item[]>();
@@ -55,12 +58,18 @@ export default async function Itinerary() {
 
       {days.map((day) => {
         const dayItems = byDay.get(day) ?? [];
+        const dayPhotos = photos.get(day) ?? [];
         return (
           <section key={day} className="flex flex-col gap-2">
-            <h2 className="tnum text-sm font-semibold text-ink/70">
+            <h2 className="tnum flex items-baseline justify-between text-sm font-semibold text-ink/70">
               {prettyDay(day)}
+              {dayPhotos.length > 0 && (
+                <span className="text-xs font-normal text-ink/40">
+                  {dayPhotos.length} photo{dayPhotos.length === 1 ? "" : "s"}
+                </span>
+              )}
             </h2>
-            {dayItems.length === 0 ? (
+            {dayItems.length === 0 && dayPhotos.length === 0 ? (
               <p className="text-sm text-ink/40">Nothing planned.</p>
             ) : (
               <ul className="flex flex-col gap-3">
@@ -71,6 +80,7 @@ export default async function Itinerary() {
                 ))}
               </ul>
             )}
+            <PhotoStrip photos={dayPhotos} />
           </section>
         );
       })}

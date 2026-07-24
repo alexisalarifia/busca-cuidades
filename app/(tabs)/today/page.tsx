@@ -8,6 +8,8 @@ import type { Item } from "@/lib/types";
 import ItemCard from "@/components/item-card";
 import TripProgress from "@/components/trip-progress";
 import NearbyCard from "@/components/nearby-card";
+import PhotoStrip from "@/components/photo-strip";
+import { photosByDay } from "@/lib/photos-by-day";
 
 export default async function Today() {
   const supabase = await createClient();
@@ -30,6 +32,9 @@ export default async function Today() {
       todayInTz(tz)
     );
   });
+
+  const photos = await photosByDay(supabase, trip!.id);
+  const todayPhotos = photos.get(todayInTz(CDMX_TZ)) ?? [];
 
   const now = Date.now();
   const nextIdx = items.findIndex((i) => new Date(i.starts_at!).getTime() >= now);
@@ -122,6 +127,18 @@ export default async function Today() {
           {items.length} today · next at{" "}
           {formatTime(nextUp.starts_at!, nextUp.venue_tz ?? CDMX_TZ)}
         </p>
+      )}
+
+      {todayPhotos.length > 0 && (
+        <section className="anim-in radius-token border border-ink/10 bg-white p-4">
+          <h2 className="mb-2 text-sm font-semibold">
+            Today&apos;s photos{" "}
+            <span className="tnum font-normal text-ink/40">
+              {todayPhotos.length}
+            </span>
+          </h2>
+          <PhotoStrip photos={todayPhotos} />
+        </section>
       )}
 
       <NearbyCard items={all} />
