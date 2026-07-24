@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getActiveTrip } from "@/lib/trip";
 import { signOut } from "@/app/auth/actions";
 import { archiveTrip } from "./actions";
+import ImportPlacesForm from "@/components/import-places-form";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -31,6 +32,11 @@ export default async function SettingsPage() {
         <p className="tnum font-medium">
           {count ?? 0} of {limit}
         </p>
+      </section>
+
+      <section className="radius-token border border-ink/10 bg-white p-4">
+        <p className="mb-2 text-sm font-semibold">Import places</p>
+        <ImportPlacesForm />
       </section>
 
       <section className="radius-token flex flex-col gap-3 border border-ink/10 bg-white p-4">

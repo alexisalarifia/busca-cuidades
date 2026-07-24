@@ -15,7 +15,7 @@ management, personal exports) follows from that.
 | Milestone | Scope | State |
 |---|---|---|
 | M1 | Scaffold, schema + RLS, auth + allowlist, trip gate, tab shell, PWA | ✅ shipped |
-| M2 | Mapbox map, manual pins, visited states, Google Maps list importer, photo Vault | 🔜 next |
+| M2 | Mapbox map, manual pins, visited states, Google Maps list importer, photo Vault | ✅ shipped |
 | M3 | Ingest pipeline: paste/URL → extraction → review card → item + pin + .ics | ⏳ |
 | M4 | Today & Itinerary views, export ZIP, Ask concierge, Trends module | ⏳ |
 
@@ -77,9 +77,11 @@ app/
   (tabs)/                Authenticated shell: today, map, itinerary,
                          ask, vault, settings + tab bar and "+"
   manifest.ts            PWA manifest
-components/              Client components (forms, tab bar, ingest sheet)
+components/              Client components (forms, tab bar, ingest sheet,
+                         map view, vault grid, place importer)
 lib/                     supabase clients, types, geocode, display-id,
-                         time helpers, trip helper
+                         time helpers, trip helper, hash, exif,
+                         import-places (KML/GeoJSON/CSV parsers)
 supabase/migrations/     Schema, RLS, allowlist trigger, storage bucket —
                          source of truth for the database
 design/tokens.css        Design tokens (fallback set until the design

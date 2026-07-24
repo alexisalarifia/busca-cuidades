@@ -4,6 +4,10 @@
 export const CDMX = { lat: 19.4326, lng: -99.1332 };
 export const CDMX_TZ = "America/Mexico_City";
 
+// Greater CDMX. Results outside this box are worse than no result at all —
+// an unlocated item stays editable; a pin in Toluca misleads.
+const CDMX_BBOX = "-99.36,19.05,-98.85,19.65";
+
 export interface GeocodeResult {
   lat: number;
   lng: number;
@@ -19,6 +23,8 @@ export async function geocode(query: string): Promise<GeocodeResult | null> {
   url.searchParams.set("q", query);
   url.searchParams.set("access_token", token);
   url.searchParams.set("proximity", `${CDMX.lng},${CDMX.lat}`);
+  url.searchParams.set("bbox", CDMX_BBOX);
+  url.searchParams.set("country", "mx");
   url.searchParams.set("limit", "1");
 
   const res = await fetch(url, { cache: "no-store" });
