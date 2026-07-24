@@ -55,6 +55,13 @@ load-bearing rules, restated:
    verbatim — keep app styles out of it.
 9. **Tabular numerals** (`.tnum`) on every timestamp and number.
 10. **No analytics, no trackers, no runtime third-party fonts.**
+11. **Ingest writes nothing before the confirming tap.** `/api/ingest` only
+    extracts; `/api/commit` is the sole write path for ingested items. See
+    [docs/INGEST.md](docs/INGEST.md).
+12. **Model names are config, not code.** `INFERENCE_MODEL` (default
+    `gpt-oss-120b`) and `INFERENCE_MODEL_ESCALATE` (`glm-5p2`) live in env.
+    Before changing one, re-query `GET {INFERENCE_BASE_URL}/models` — the
+    Fireworks hosted set rotates; don't trust a name from memory.
 
 ## Sharp edges already hit (don't rediscover)
 

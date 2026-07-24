@@ -16,7 +16,7 @@ management, personal exports) follows from that.
 |---|---|---|
 | M1 | Scaffold, schema + RLS, auth + allowlist, trip gate, tab shell, PWA | ✅ shipped |
 | M2 | Mapbox map, manual pins, visited states, Google Maps list importer, photo Vault | ✅ shipped |
-| M3 | Ingest pipeline: paste/URL → extraction → review card → item + pin + .ics | ⏳ |
+| M3 | Ingest pipeline: paste/URL → extraction → review card → item + pin + .ics | ✅ shipped |
 | M4 | Today & Itinerary views, export ZIP, Ask concierge, Trends module | ⏳ |
 
 ## Quick start
@@ -39,9 +39,10 @@ Open http://localhost:3000. Full environment/provisioning instructions
 - **Supabase** — email+password auth, Postgres with row-level security, one
   private storage bucket (`vault`)
 - **Mapbox GL JS** + Mapbox Geocoding v6
-- **LLM** — OpenAI-compatible chat completions (Fireworks), wrapped in one
-  thin module (`lib/llm.ts`, lands in M3) so swapping providers is a config
-  change
+- **LLM** — OpenAI-compatible chat completions (Fireworks, `gpt-oss-120b`
+  for extraction with a `glm-5p2` escalation seam for low-confidence
+  parses), wrapped in one thin module (`lib/llm.ts`) so swapping providers
+  or escalating is a config change
 - **Tavily** search, called from server routes only
 - **Tailwind CSS 4** consuming design tokens from `design/tokens.css`
 
@@ -95,6 +96,8 @@ docs/                    Architecture, setup, and usage guides
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design, data model,
   data flows, security model, key decisions
+- [docs/INGEST.md](docs/INGEST.md) — the ingest pipeline in detail: the
+  extraction contract, model choice, `.ics` generator, failure handling
 - [docs/SETUP.md](docs/SETUP.md) — zero-to-running: provisioning, env,
   migrations, deploy
 - [docs/USAGE.md](docs/USAGE.md) — how to actually use the app, screen by
