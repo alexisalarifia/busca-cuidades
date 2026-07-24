@@ -32,3 +32,130 @@ body {
 .radius-token {
   border-radius: var(--radius);
 }
+
+/* Motion. Everything below rides the --motion token (180ms ease-out) so the
+   design track can retime the whole app from one variable. */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(14px);
+    opacity: 0.6;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes grow-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.anim-in {
+  animation: fade-in-up var(--motion) both;
+}
+
+.anim-pop {
+  animation: pop 240ms ease-out;
+}
+
+.anim-sheet {
+  animation: sheet-up var(--motion) both;
+}
+
+.anim-grow {
+  animation: grow-in var(--motion) both;
+}
+
+/* Map pins carry an inline rotate(-45deg) to form the teardrop point, so their
+   animation must re-declare it — a bare scale() would drop the rotation for
+   the duration and snap back. */
+@keyframes pin-drop {
+  from {
+    transform: rotate(-45deg) scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(-45deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.anim-pin {
+  animation: pin-drop var(--motion) both;
+}
+
+/* Cards stagger in rather than appearing all at once. */
+.stagger > * {
+  animation: fade-in-up var(--motion) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 40ms; }
+.stagger > *:nth-child(3) { animation-delay: 80ms; }
+.stagger > *:nth-child(4) { animation-delay: 120ms; }
+.stagger > *:nth-child(5) { animation-delay: 160ms; }
+.stagger > *:nth-child(n + 6) { animation-delay: 200ms; }
+
+/* Tap feedback — the app previously gave none. */
+.tap {
+  transition:
+    transform var(--motion),
+    background-color var(--motion),
+    border-color var(--motion),
+    opacity var(--motion);
+}
+.tap:active {
+  transform: scale(0.97);
+}
+
+.bar-fill {
+  transition: width 600ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-in,
+  .anim-pop,
+  .anim-sheet,
+  .anim-grow,
+  .anim-pin,
+  .stagger > * {
+    animation: none;
+  }
+  .tap,
+  .bar-fill {
+    transition: none;
+  }
+  .tap:active {
+    transform: none;
+  }
+}

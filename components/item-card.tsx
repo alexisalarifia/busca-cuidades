@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Category, Item } from "@/lib/types";
 import { CDMX_TZ } from "@/lib/geocode";
@@ -27,6 +27,7 @@ interface Props {
 export default function ItemCard({ item, emphasized }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [justVisited, setJustVisited] = useState(false);
   const tz = item.venue_tz ?? CDMX_TZ;
 
   return (
@@ -61,22 +62,26 @@ export default function ItemCard({ item, emphasized }: Props) {
       <div className="mt-3 flex flex-wrap items-center gap-3 pl-2 text-sm">
         <button
           disabled={pending}
-          onClick={() =>
+          onClick={() => {
+            if (!item.visited) {
+              setJustVisited(true);
+              setTimeout(() => setJustVisited(false), 260);
+            }
             startTransition(async () => {
               await toggleVisited(item.id, !item.visited);
               router.refresh();
-            })
-          }
-          className={`radius-token px-3 py-1.5 text-xs font-semibold ${
-            item.visited ? "bg-ink text-paper" : "border border-ink/20"
-          }`}
+            });
+          }}
+          className={`tap radius-token px-3 py-1.5 text-xs font-semibold ${
+            justVisited ? "anim-pop" : ""
+          } ${item.visited ? "bg-ink text-paper" : "border border-ink/20"}`}
         >
           {item.visited ? "Visited ✓" : "Mark visited"}
         </button>
         {item.starts_at && (
           <a
             href={`/api/ics/${item.id}`}
-            className="text-xs underline underline-offset-2"
+            className="tap text-xs underline underline-offset-2"
           >
             Add to Calendar
           </a>
@@ -86,7 +91,7 @@ export default function ItemCard({ item, emphasized }: Props) {
             href={`https://maps.apple.com/?daddr=${item.lat},${item.lng}`}
             target="_blank"
             rel="noreferrer"
-            className="text-xs text-ink/60 underline underline-offset-2"
+            className="tap text-xs text-ink/60 underline underline-offset-2"
           >
             Directions
           </a>

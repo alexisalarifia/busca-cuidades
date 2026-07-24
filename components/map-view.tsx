@@ -108,6 +108,7 @@ export default function MapView({ items, photoCounts, lodging }: Props) {
     for (const item of shown) {
       const el = document.createElement("button");
       el.setAttribute("aria-label", `${item.display_id} ${item.title}`);
+      el.className = "anim-pin";
       el.style.cssText = `
         width:28px;height:28px;border-radius:50% 50% 50% 0;
         transform:rotate(-45deg);cursor:pointer;padding:0;
@@ -159,7 +160,7 @@ export default function MapView({ items, photoCounts, lodging }: Props) {
       </div>
 
       {selected && (
-        <div className="radius-token shadow-hard absolute inset-x-3 bottom-3 border border-ink/10 bg-paper p-4">
+        <div className="anim-sheet radius-token shadow-hard absolute inset-x-3 bottom-3 border border-ink/10 bg-paper p-4">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-semibold">{selected.title}</p>
@@ -232,7 +233,7 @@ export default function MapView({ items, photoCounts, lodging }: Props) {
               });
             }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full bg-paper p-5 pb-10"
+            className="anim-sheet w-full bg-paper p-5 pb-10"
           >
             <h2 className="text-lg font-semibold">New pin</h2>
             <p className="tnum mt-0.5 text-xs text-ink/50">

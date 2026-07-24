@@ -127,7 +127,7 @@ export default function VaultGrid({ entries, tripId, items }: Props) {
           onClick={() => setOpenId(null)}
         >
           <div
-            className="max-h-[85dvh] w-full overflow-y-auto bg-paper p-5 pb-10"
+            className="anim-sheet max-h-[85dvh] w-full overflow-y-auto bg-paper p-5 pb-10"
             onClick={(e) => e.stopPropagation()}
           >
             {open.url && open.mime.startsWith("image/") && (

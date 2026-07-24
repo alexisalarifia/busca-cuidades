@@ -210,7 +210,7 @@ export default function IngestButton() {
         type="button"
         aria-label="Add to trip"
         onClick={() => setOpen(true)}
-        className="shadow-hard fixed bottom-20 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-3xl font-light text-white"
+        className="tap shadow-hard fixed bottom-20 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-3xl font-light text-white"
         style={{ marginBottom: "env(safe-area-inset-bottom)" }}
       >
         +
@@ -219,7 +219,7 @@ export default function IngestButton() {
       {open && (
         <div className="fixed inset-0 z-50 flex items-end bg-ink/40" onClick={close}>
           <div
-            className="radius-token max-h-[90dvh] w-full overflow-y-auto bg-paper p-5 pb-10"
+            className="anim-sheet radius-token max-h-[90dvh] w-full overflow-y-auto bg-paper p-5 pb-10"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mx-auto flex max-w-md flex-col gap-3">
