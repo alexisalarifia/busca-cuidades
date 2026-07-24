@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 export interface AuthState {
@@ -41,8 +42,17 @@ export async function signUp(
     return { error: "Password needs at least 8 characters." };
   }
 
+  // Point the confirmation link at this deployment's callback rather than
+  // Supabase's Site URL default (which is localhost on a fresh project).
+  const host = (await headers()).get("host");
+  const proto = host?.startsWith("localhost") ? "http" : "https";
+
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${proto}://${host}/auth/callback` },
+  });
   if (error) return { error: error.message };
 
   if (data.session) redirect("/today");
