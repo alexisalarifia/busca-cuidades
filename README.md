@@ -104,6 +104,8 @@ docs/                    Architecture, setup, and usage guides
   screen
 - [AGENTS.md](AGENTS.md) — working notes for LLM coding agents (and humans
   who want the sharp edges listed)
+- [design/DESIGN_BRIEF.md](design/DESIGN_BRIEF.md) — starting point for the
+  design track: the token seam, visual thesis, screens, and working method
 
 ## Security posture
 
