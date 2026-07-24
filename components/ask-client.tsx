@@ -1,18 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { NEIGHBORHOODS } from "@/lib/neighborhoods";
 
-// Neighborhood slot options — CDMX seed (brief §8).
-const NEIGHBORHOODS = [
-  "Roma Norte",
-  "Condesa",
-  "Juárez",
-  "Centro Histórico",
-  "Coyoacán",
-  "Polanco",
-  "San Rafael",
-  "Narvarte",
-];
+
 const NEAR_ME = ["restaurants", "cafés", "street food", "bars"] as const;
 const PLAN_SPANS = ["morning", "afternoon", "evening", "full day", "night out"] as const;
 
@@ -38,7 +29,7 @@ export default function AskClient() {
   const [mode, setMode] = useState<"near" | "plan" | "reddit" | "free">("near");
   const [nearWhat, setNearWhat] = useState<(typeof NEAR_ME)[number]>("restaurants");
   const [span, setSpan] = useState<(typeof PLAN_SPANS)[number]>("morning");
-  const [hood, setHood] = useState(NEIGHBORHOODS[0]);
+  const [hood, setHood] = useState<string>(NEIGHBORHOODS[0]);
   const [goal, setGoal] = useState("food");
   const [freeText, setFreeText] = useState("");
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);

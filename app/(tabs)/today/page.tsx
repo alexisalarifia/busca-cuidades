@@ -6,6 +6,7 @@ import { formatDay, formatTime, todayInTz } from "@/lib/time";
 import { getTripPhase } from "@/lib/trip-phase";
 import type { Item } from "@/lib/types";
 import ItemCard from "@/components/item-card";
+import TripProgress from "@/components/trip-progress";
 
 export default async function Today() {
   const supabase = await createClient();
@@ -103,6 +104,8 @@ export default async function Today() {
           {formatTime(nextUp.starts_at!, nextUp.venue_tz ?? CDMX_TZ)}
         </p>
       )}
+
+      <TripProgress items={all} />
     </main>
   );
 }

@@ -9,6 +9,7 @@ import { KINDS } from "@/lib/display-id";
 import { formatDay, formatTime } from "@/lib/time";
 import { CDMX, CDMX_TZ } from "@/lib/geocode";
 import { createManualPin, setVisited } from "@/app/(tabs)/map/actions";
+import TripProgress from "@/components/trip-progress";
 
 const CATEGORY_VAR: Record<Category, string> = {
   flight: "--c-flight",
@@ -150,13 +151,17 @@ export default function MapView({ items, photoCounts, lodging }: Props) {
           <button
             key={key}
             onClick={() => toggle(key)}
-            className={`radius-token shadow-hard px-3 py-1.5 text-xs font-semibold ${
+            className={`tap radius-token shadow-hard px-3 py-1.5 text-xs font-semibold ${
               layers[key] ? "bg-ink text-paper" : "bg-paper text-ink/60"
             }`}
           >
             {label}
           </button>
         ))}
+      </div>
+
+      <div className="anim-in absolute right-3 top-3">
+        <TripProgress items={items} compact />
       </div>
 
       {selected && (
