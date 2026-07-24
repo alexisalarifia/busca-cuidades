@@ -22,8 +22,8 @@ management, personal exports) follows from that.
 ## Quick start
 
 ```bash
-git clone git@github.com:alexisalarifia/busca-cuidades.git
-cd busca-cuidades
+git clone git@github.com:alexisalarifia/busca-ciudades.git
+cd busca-ciudades
 npm install
 cp .env.example .env.local   # then fill in every value — see docs/SETUP.md
 npm run dev

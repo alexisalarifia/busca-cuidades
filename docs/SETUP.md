@@ -16,8 +16,8 @@ this repo's history.
 ## 1. Clone and install
 
 ```bash
-git clone git@github.com:alexisalarifia/busca-cuidades.git
-cd busca-cuidades
+git clone git@github.com:alexisalarifia/busca-ciudades.git
+cd busca-ciudades
 npm install
 ```
 
@@ -57,11 +57,25 @@ What they create, in order:
 2. `0002_storage_vault.sql` — the private `vault` storage bucket and its
    per-user object policies.
 3. `0003_signup_allowlist.sql` — the `before insert` trigger on `auth.users`
-   that rejects any email except the allowed one. **The email is hardcoded
-   in this file** (an allowlist of one); edit it if the allowed user ever
-   changes, and keep it in sync with `ALLOWED_USER_EMAIL`.
+   that rejects any email except the allowed one.
 4. `0004_revoke_trigger_execute.sql` — revokes client-role EXECUTE on the
    trigger function (security lint).
+5. `0005_allowlist_from_config.sql` — moves the allowed address out of source
+   control into the locked-down `app_config` table.
+
+**Required manual step after migrating.** No personal address lives in this
+repo, so set it once directly against the database (SQL editor, `psql`, or the
+Supabase MCP):
+
+```sql
+insert into public.app_config (key, value)
+values ('allowed_email', 'you@example.com')
+on conflict (key) do update set value = excluded.value, updated_at = now();
+```
+
+Keep it in sync with `ALLOWED_USER_EMAIL` in your env. If you skip this step
+the allowlist **fails closed** — every signup is rejected, which is the
+intended failure direction.
 
 No other Supabase configuration is required; email+password auth works out
 of the box. Note the default Supabase auth flow sends a confirmation email
@@ -108,8 +122,8 @@ files from the inline SVG in that script.
 ## Troubleshooting
 
 - **"Signups are closed."** — the email doesn't match `ALLOWED_USER_EMAIL`
-  (server action) or the hardcoded address in migration `0003` (DB trigger).
-  Both must agree.
+  (server action) or the `allowed_email` row in `app_config` (DB trigger).
+  Both must agree. A missing `app_config` row rejects every signup by design.
 - **Trip gate loops back to itself** — the signed-in user has no `active`
   trip; complete the gate form. Archiving the trip from Settings returns you
   to the gate by design.
