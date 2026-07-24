@@ -4,6 +4,7 @@ import { getActiveTrip } from "@/lib/trip";
 import { chat } from "@/lib/llm";
 import {
   extractionSchema,
+  normalizeExtraction,
   EXTRACTION_SYSTEM,
   extractionUserPrompt,
   type Extraction,
@@ -76,7 +77,9 @@ export async function POST(request: Request) {
             : []),
         ],
       });
-      const parsed = extractionSchema.safeParse(JSON.parse(result.content));
+      const parsed = extractionSchema.safeParse(
+        normalizeExtraction(JSON.parse(result.content))
+      );
       if (parsed.success) {
         extraction = parsed.data;
       } else {

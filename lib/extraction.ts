@@ -32,6 +32,39 @@ export const extractionSchema = z.object({
 
 export type Extraction = z.infer<typeof extractionSchema>;
 
+const CATEGORIES = [
+  "flight",
+  "ticket",
+  "accommodation",
+  "dining",
+  "excursion",
+  "transport",
+  "note",
+] as const;
+
+// Open-weights models occasionally drift on key names — e.g. emitting
+// "name":"flight" instead of "category":"flight" (seen on real AA receipts).
+// Coerce the handful of known aliases before zod so a valid booking doesn't
+// fall to manual mode over a key-name slip.
+export function normalizeExtraction(raw: unknown): unknown {
+  if (!raw || typeof raw !== "object") return raw;
+  const obj = { ...(raw as Record<string, unknown>) };
+
+  if (obj.category == null) {
+    for (const alias of ["name", "type", "category_name"]) {
+      const v = obj[alias];
+      if (typeof v === "string" && (CATEGORIES as readonly string[]).includes(v)) {
+        obj.category = v;
+        break;
+      }
+    }
+  }
+  // "type":"object" is JSON-schema noise, never a category.
+  if (obj.type === "object") delete obj.type;
+
+  return obj;
+}
+
 export const EXTRACTION_SYSTEM = `You extract structured travel-booking data from a pasted email, receipt, or web page for a trip to Mexico City.
 
 Return ONLY a JSON object with these keys:
