@@ -7,6 +7,7 @@ import { getTripPhase } from "@/lib/trip-phase";
 import type { Item } from "@/lib/types";
 import ItemCard from "@/components/item-card";
 import TripProgress from "@/components/trip-progress";
+import NearbyCard from "@/components/nearby-card";
 
 export default async function Today() {
   const supabase = await createClient();
@@ -33,6 +34,20 @@ export default async function Today() {
   const now = Date.now();
   const nextIdx = items.findIndex((i) => new Date(i.starts_at!).getTime() >= now);
   const nextUp = nextIdx >= 0 ? items[nextIdx] : null;
+
+  // "Free until 6:40 PM" — the gap between now and the next commitment is the
+  // question the app should answer without being asked.
+  const freeMinutes = nextUp
+    ? Math.round((new Date(nextUp.starts_at!).getTime() - now) / 60000)
+    : null;
+  const freeLabel =
+    freeMinutes != null && freeMinutes > 45
+      ? `Free for ${
+          freeMinutes >= 120
+            ? `${Math.floor(freeMinutes / 60)} hours`
+            : `${freeMinutes} minutes`
+        } — until ${formatTime(nextUp!.starts_at!, nextUp!.venue_tz ?? CDMX_TZ)}`
+      : null;
 
   // Next thing anywhere in the trip — what to show when today is empty.
   const nextAnywhere = timed.find((i) => new Date(i.starts_at!).getTime() >= now);
@@ -98,13 +113,18 @@ export default async function Today() {
         </section>
       )}
 
-      {nextUp && items.length > 0 && (
+      {freeLabel && (
+        <p className="tnum anim-in text-xs font-medium text-ink/60">{freeLabel}</p>
+      )}
+
+      {nextUp && items.length > 0 && !freeLabel && (
         <p className="tnum text-xs text-ink/40">
           {items.length} today · next at{" "}
           {formatTime(nextUp.starts_at!, nextUp.venue_tz ?? CDMX_TZ)}
         </p>
       )}
 
+      <NearbyCard items={all} />
       <TripProgress items={all} />
     </main>
   );
