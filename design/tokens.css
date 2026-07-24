@@ -1,0 +1,18 @@
+/* Fallback tokens per brief §14 — replaced verbatim when the design track
+   delivers /design/tokens.css. Do not add tokens here; add app-level styles
+   in app/globals.css instead. */
+:root {
+  --paper: #FAF7F2;
+  --ink: #1A1A1A;
+  --accent: #E4007C; /* rosa mexicano — full surfaces with white text only */
+  --c-flight: #1D6FB8;
+  --c-accommodation: #C65A32;
+  --c-dining: #2E7D4F;
+  --c-excursion: #D9A013;
+  --c-ticket: #6B4FA0;
+  --c-transport: #5B6B7A;
+  --c-note: #6E6A64;
+  --shadow-hard: 3px 3px 0 rgba(26, 26, 26, 0.14);
+  --radius: 6px;
+  --motion: 180ms ease-out;
+}
