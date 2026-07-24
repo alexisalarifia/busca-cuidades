@@ -17,7 +17,7 @@ management, personal exports) follows from that.
 | M1 | Scaffold, schema + RLS, auth + allowlist, trip gate, tab shell, PWA | ✅ shipped |
 | M2 | Mapbox map, manual pins, visited states, Google Maps list importer, photo Vault | ✅ shipped |
 | M3 | Ingest pipeline: paste/URL → extraction → review card → item + pin + .ics | ✅ shipped |
-| M4 | Today & Itinerary views, export ZIP, Ask concierge, Trends module | ⏳ |
+| M4 | Today & Itinerary views, export ZIP, Ask concierge, Trends module | ✅ shipped |
 
 ## Quick start
 

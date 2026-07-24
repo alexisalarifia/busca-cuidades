@@ -1,0 +1,80 @@
+/* Print-first styling for the trip book (brief §9). Neutral scaffolding only;
+   the design track owns the final cover motif and type. */
+.book {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  color: var(--ink);
+  background: var(--paper);
+}
+.cover {
+  padding: 3rem 0 2rem;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 2rem;
+}
+.cover .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+.cover h1 {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 0.25rem 0;
+}
+.cover .dates {
+  color: var(--ink);
+  opacity: 0.6;
+}
+.day {
+  margin-bottom: 1.75rem;
+  break-inside: avoid;
+}
+.day h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.15);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+.entry {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  break-inside: avoid;
+}
+.entry .time {
+  flex-shrink: 0;
+  width: 4.5rem;
+  font-weight: 600;
+}
+.entry .title {
+  font-weight: 600;
+}
+.entry .id {
+  font-weight: 400;
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+.entry .addr,
+.entry .notes {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+.foot {
+  margin-top: 3rem;
+  font-size: 0.75rem;
+  opacity: 0.4;
+  text-align: center;
+}
+
+@media print {
+  .foot {
+    display: none;
+  }
+  .book {
+    padding: 0;
+  }
+}

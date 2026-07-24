@@ -42,12 +42,18 @@ export default async function SettingsPage() {
       <section className="radius-token flex flex-col gap-3 border border-ink/10 bg-white p-4">
         <p className="text-sm text-ink/60">Trip</p>
         <p className="font-medium">{trip?.name}</p>
-        <button
-          disabled
-          className="radius-token border border-ink/20 px-4 py-2 text-left text-sm opacity-50"
+        <a
+          href="/api/export"
+          className="radius-token block border border-ink/20 px-4 py-2 text-left text-sm"
         >
-          Export trip — arrives with a later build
-        </button>
+          Export trip (.zip)
+        </a>
+        <a
+          href="/trip-book"
+          className="radius-token block border border-ink/20 px-4 py-2 text-left text-sm"
+        >
+          Trip book (print to PDF)
+        </a>
         <form action={archiveTrip}>
           <button className="radius-token w-full border border-ink/20 px-4 py-2 text-left text-sm">
             Archive this trip

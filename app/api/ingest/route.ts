@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     try {
       const result = await chat({
         json: true,
-        maxTokens: 700,
+        maxTokens: 1200,
         messages: [
           { role: "system", content: EXTRACTION_SYSTEM },
           { role: "user", content: extractionUserPrompt(sourceRaw) },

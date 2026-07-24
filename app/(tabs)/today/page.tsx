@@ -2,8 +2,9 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveTrip } from "@/lib/trip";
 import { CDMX_TZ } from "@/lib/geocode";
-import { formatDay, formatTime, todayInTz } from "@/lib/time";
+import { formatDay, todayInTz } from "@/lib/time";
 import type { Item } from "@/lib/types";
+import ItemCard from "@/components/item-card";
 
 export default async function Today() {
   const supabase = await createClient();
@@ -16,13 +17,18 @@ export default async function Today() {
     .not("starts_at", "is", null)
     .order("starts_at", { ascending: true });
 
-  const items = ((data as Item[]) ?? []).filter((item) => {
+  const all = (data as Item[]) ?? [];
+  const items = all.filter((item) => {
     const tz = item.venue_tz ?? CDMX_TZ;
     return (
       new Date(item.starts_at!).toLocaleDateString("sv-SE", { timeZone: tz }) ===
       todayInTz(tz)
     );
   });
+
+  // Next-up = first item today whose start is still in the future.
+  const now = Date.now();
+  const nextIdx = items.findIndex((i) => new Date(i.starts_at!).getTime() >= now);
 
   return (
     <main className="flex flex-col gap-6">
@@ -34,15 +40,7 @@ export default async function Today() {
           <p className="text-sm text-ink/60">{trip!.name}</p>
         </div>
         <Link href="/settings" aria-label="Settings" className="p-1 text-ink/50">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
             <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z" />
           </svg>
@@ -55,18 +53,14 @@ export default async function Today() {
         </p>
       ) : (
         <ul className="flex flex-col gap-3">
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className="radius-token shadow-hard border border-ink/10 bg-white p-4"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="font-semibold">{item.title}</span>
-                <span className="tnum text-sm text-ink/60">
-                  {formatTime(item.starts_at!, item.venue_tz ?? CDMX_TZ)}
-                </span>
-              </div>
-              <p className="tnum mt-1 text-xs text-ink/50">{item.display_id}</p>
+          {items.map((item, i) => (
+            <li key={item.id}>
+              {i === nextIdx && (
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent">
+                  Next up
+                </p>
+              )}
+              <ItemCard item={item} emphasized={i === nextIdx} />
             </li>
           ))}
         </ul>

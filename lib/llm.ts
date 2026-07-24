@@ -15,6 +15,14 @@ interface ChatOptions {
   temperature?: number;
   /** Use the escalation model (larger, pricier) instead of the default. */
   escalate?: boolean;
+  /**
+   * Reasoning budget for gpt-oss-class models. Every task here is structured
+   * extraction or grounded synthesis, so "low" is the right default: it keeps
+   * the model from spending the whole token budget on reasoning and returning
+   * empty content (seen on long trends/ingest contexts), and it's cheaper.
+   * Set null to omit the param entirely for models that reject it.
+   */
+  reasoningEffort?: "low" | "medium" | "high" | null;
 }
 
 export interface ChatResult {
@@ -39,6 +47,8 @@ export async function chat(opts: ChatOptions): Promise<ChatResult> {
     throw new Error("Inference not configured (INFERENCE_* env missing).");
   }
 
+  const effort = opts.reasoningEffort === undefined ? "low" : opts.reasoningEffort;
+
   const res = await fetch(`${base}/chat/completions`, {
     method: "POST",
     headers: {
@@ -50,6 +60,7 @@ export async function chat(opts: ChatOptions): Promise<ChatResult> {
       messages: opts.messages,
       temperature: opts.temperature ?? 0.1,
       max_tokens: opts.maxTokens ?? 700,
+      ...(effort ? { reasoning_effort: effort } : {}),
       ...(opts.json ? { response_format: { type: "json_object" } } : {}),
     }),
     cache: "no-store",

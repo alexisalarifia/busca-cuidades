@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getActiveTrip } from "@/lib/trip";
 import TabBar from "@/components/tab-bar";
 import IngestButton from "@/components/ingest-button";
+import OfflineBanner from "@/components/offline-banner";
 
 export default async function TabsLayout({
   children,
@@ -15,6 +16,7 @@ export default async function TabsLayout({
 
   return (
     <div className="mx-auto w-full max-w-md px-5 pb-28 pt-8">
+      <OfflineBanner />
       {children}
       <IngestButton />
       <TabBar />

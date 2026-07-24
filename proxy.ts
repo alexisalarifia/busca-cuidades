@@ -9,6 +9,7 @@ const PROTECTED = [
   "/vault",
   "/settings",
   "/trip-gate",
+  "/trip-book",
 ];
 
 export default async function proxy(request: NextRequest) {
